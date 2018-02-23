@@ -21,7 +21,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.widget.TextView;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import ren.qinc.markdowneditors.R;
 import ren.qinc.markdowneditors.base.BaseFragment;
 import ren.qinc.markdowneditors.event.RxEvent;
@@ -32,9 +32,9 @@ import ren.qinc.markdowneditors.widget.MarkdownPreviewView;
  * Created by 沈钦赐 on 16/1/21.
  */
 public class EditorMarkdownFragment extends BaseFragment {
-    @Bind(R.id.markdownView)
+    @BindView(R.id.markdownView)
     protected MarkdownPreviewView mMarkdownPreviewView;
-    @Bind(R.id.title)
+    @BindView(R.id.title)
     protected TextView mName;
     private String mContent;
 

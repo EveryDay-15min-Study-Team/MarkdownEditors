@@ -23,7 +23,7 @@ import android.support.annotation.NonNull;
 
 import java.io.InputStream;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import ren.qinc.markdowneditors.R;
 import ren.qinc.markdowneditors.base.BaseToolbarActivity;
 import ren.qinc.markdowneditors.utils.Check;
@@ -38,7 +38,7 @@ import ren.qinc.markdowneditors.widget.MarkdownPreviewView;
 public class CommonMarkdownActivity extends BaseToolbarActivity implements MarkdownPreviewView.OnLoadingFinishListener {
     private static final String CONTENT = "CONTENT";
     private static final String TITLE = "TITLE";
-    @Bind(R.id.markdownView)
+    @BindView(R.id.markdownView)
     protected MarkdownPreviewView mMarkdownPreviewView;
     private String mTitle;
     private String mContent;

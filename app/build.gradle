@@ -1,13 +1,12 @@
-import java.text.SimpleDateFormat
-
 apply plugin: 'com.android.application'
 // lambda
 apply plugin: 'me.tatarka.retrolambda'
 
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    compileSdkVersion 25
+    buildToolsVersion '26.0.2'
+    flavorDimensions "dev",'release'
 
     defaultConfig {
         applicationId project.PACKAGE_NAME
@@ -22,7 +21,7 @@ android {
             //Zipalign优化
             zipAlignEnabled true
             // 移除无用的resource文件
-            shrinkResources true
+            shrinkResources false
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -38,34 +37,39 @@ android {
     dexOptions {
         javaMaxHeapSize "4g"
         preDexLibraries = true
-        incremental true//开启dex增量编译
+//        incremental true//开启dex增量编译
     }
 
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
+//    compileOptions {
+//        sourceCompatibility JavaVersion.VERSION_1_8
+//        targetCompatibility JavaVersion.VERSION_1_8
+//    }
     productFlavors {
 
         flavors_release {
-
+            dimension 'release'
             manifestPlaceholders = [str: "releaseStr", package_name: project.PACKAGE_NAME]
             // 这里的参数是为了在 java 代码中使用，具体的使用方式为：context.getResources().getString(R.string.strKey);
             resValue("string", "serverurl", "formal")
         }
         flavors_dev {
+            dimension 'dev'
             manifestPlaceholders = [str: "devStr", package_name: project.PACKAGE_NAME]
 
             resValue("string", "serverurl", "test")
         }
     }
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
+    }
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:23.1.1'
-    compile 'com.android.support:support-v4:23.1.1'
-    compile 'com.android.support:design:23.1.1'
+    compile 'com.android.support:appcompat-v7:25.3.0'
+    compile 'com.android.support:support-v4:25.3.0'
+    compile 'com.android.support:design:25.3.0'
 
 
     compile 'com.github.bumptech.glide:glide:3.6.1'
@@ -74,7 +78,9 @@ dependencies {
     compile 'io.reactivex:rxjava:1.1.0'
 
 
-    compile 'com.jakewharton:butterknife:7.0.1'
+//    compile 'com.jakewharton:butterknife:7.0.1'
+    compile 'com.jakewharton:butterknife:8.8.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 
     //崩溃异常提示
     debugCompile 'me.drakeet.library:crashwoodpecker:0.9.7'

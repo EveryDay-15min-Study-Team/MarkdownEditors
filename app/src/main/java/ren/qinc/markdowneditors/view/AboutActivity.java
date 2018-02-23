@@ -25,7 +25,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.OnClick;
 import ren.qinc.markdowneditors.AppContext;
 import ren.qinc.markdowneditors.R;
@@ -39,9 +39,9 @@ import ren.qinc.markdowneditors.utils.SystemUtils;
  * Created by 沈钦赐 on 16/6/30.
  */
 public class AboutActivity extends BaseToolbarActivity {
-    @Bind(R.id.version)
+    @BindView(R.id.version)
     TextView version;
-    @Bind(R.id.description)
+    @BindView(R.id.description)
     TextView description;
     private static final String MAIL = "mailto:qq@qinc.me";
 

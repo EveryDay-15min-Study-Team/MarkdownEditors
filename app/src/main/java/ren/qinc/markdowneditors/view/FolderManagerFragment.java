@@ -41,7 +41,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.OnClick;
 import ren.qinc.markdowneditors.R;
 import ren.qinc.markdowneditors.adapter.FileListAdapter;
@@ -63,13 +63,13 @@ import ren.qinc.markdowneditors.widget.TabView;
  */
 public class FolderManagerFragment extends BaseRefreshFragment implements IFolderManagerView, View.OnClickListener, OnItemClickLitener {
 
-    @Bind(R.id.content_view)
+    @BindView(R.id.content_view)
     protected RecyclerView mfileList;
-    @Bind(R.id.tab_view)
+    @BindView(R.id.tab_view)
     protected TabView mTabView;
-    @Bind(R.id.noContent)
+    @BindView(R.id.noContent)
     protected View noContent;
-    @Bind(R.id.fab)
+    @BindView(R.id.fab)
     protected FloatingActionButton mActionButton;
 
     private FolderManagerPresenter mPresenter;

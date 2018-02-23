@@ -19,7 +19,7 @@ package ren.qinc.markdowneditors.base;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import ren.qinc.markdowneditors.R;
 
 /**
@@ -28,7 +28,7 @@ import ren.qinc.markdowneditors.R;
  */
 public abstract class BaseRefreshFragment extends BaseFragment {
 
-    @Bind(R.id.id_refresh)
+    @BindView(R.id.id_refresh)
     protected SwipeRefreshLayout mSwipeRefreshLayout;
 
     public SwipeRefreshLayout getSwipeRefreshLayout() {

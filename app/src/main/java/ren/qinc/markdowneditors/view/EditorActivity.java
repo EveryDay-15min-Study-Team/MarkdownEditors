@@ -39,7 +39,7 @@ import android.widget.EditText;
 
 import java.io.File;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import ren.qinc.markdowneditors.R;
 import ren.qinc.markdowneditors.base.BaseApplication;
 import ren.qinc.markdowneditors.base.BaseToolbarActivity;
@@ -66,9 +66,9 @@ public class EditorActivity extends BaseToolbarActivity implements IEditorActivi
     private String mName;
     private String currentFilePath;
 
-    @Bind(R.id.action_other_operate)
+    @BindView(R.id.action_other_operate)
     protected ExpandableLinearLayout mExpandLayout;
-    @Bind(R.id.pager)
+    @BindView(R.id.pager)
     protected ViewPager mViewPager;
     private TabIconView mTabIconView;
 

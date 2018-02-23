@@ -29,7 +29,7 @@ import android.view.animation.DecelerateInterpolator;
 
 import java.lang.reflect.Method;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import ren.qinc.markdowneditors.R;
 import ren.qinc.markdowneditors.utils.Check;
 import ren.qinc.markdowneditors.utils.ViewUtils;
@@ -40,9 +40,9 @@ import ren.qinc.markdowneditors.utils.ViewUtils;
  * Created by 沈钦赐 on 16/1/25.
  */
 public abstract class BaseToolbarActivity extends BaseActivity {
-    @Bind(R.id.id_toolbar)
+    @BindView(R.id.id_toolbar)
     protected Toolbar mToolbar;
-    @Bind(R.id.id_appbar)
+    @BindView(R.id.id_appbar)
     protected AppBarLayout mAppBar;
 
     @Override

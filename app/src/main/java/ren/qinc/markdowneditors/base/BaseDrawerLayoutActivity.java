@@ -23,7 +23,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import ren.qinc.markdowneditors.R;
 import ren.qinc.markdowneditors.utils.SystemBarUtils;
 
@@ -33,9 +33,9 @@ import ren.qinc.markdowneditors.utils.SystemBarUtils;
  * Created by 沈钦赐 on 16/1/15.
  */
 public abstract class BaseDrawerLayoutActivity extends BaseToolbarActivity implements NavigationView.OnNavigationItemSelectedListener {
-    @Bind(R.id.id_drawer_layout)
+    @BindView(R.id.id_drawer_layout)
     protected DrawerLayout mDrawerLayout;
-    @Bind(R.id.id_navigation_view)
+    @BindView(R.id.id_navigation_view)
     protected NavigationView mNavigationView;
 
     protected DrawerLayout getDrawerLayout() {

@@ -18,7 +18,7 @@ package ren.qinc.markdowneditors.base;
 
 import android.support.v4.widget.SwipeRefreshLayout;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import ren.qinc.markdowneditors.R;
 
 
@@ -28,7 +28,7 @@ import ren.qinc.markdowneditors.R;
  */
 public abstract class BaseRefreshActivity extends BaseToolbarActivity {
 
-    @Bind(R.id.id_refresh)
+    @BindView(R.id.id_refresh)
     SwipeRefreshLayout mSwipeRefreshLayout;
 
     @Override

@@ -32,7 +32,7 @@ import android.widget.Toast;
 
 import java.io.File;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import de.mrapp.android.bottomsheet.BottomSheet;
 import ren.qinc.edit.PerformEdit;
 import ren.qinc.markdowneditors.AppContext;
@@ -55,9 +55,9 @@ import ren.qinc.markdowneditors.utils.SystemUtils;
  */
 public class EditorFragment extends BaseFragment implements IEditorFragmentView, View.OnClickListener {
     public static final String FILE_PATH_KEY = "FILE_PATH_KEY";
-    @Bind(R.id.title)
+    @BindView(R.id.title)
     protected EditText mName;
-    @Bind(R.id.content)
+    @BindView(R.id.content)
     protected EditText mContent;
 
     private EditorFragmentPresenter mPresenter;
