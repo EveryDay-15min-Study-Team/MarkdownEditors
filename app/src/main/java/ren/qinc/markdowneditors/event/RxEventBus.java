@@ -15,10 +15,9 @@
  */
 package ren.qinc.markdowneditors.event;
 
-import rx.Observable;
-import rx.subjects.PublishSubject;
-import rx.subjects.SerializedSubject;
-import rx.subjects.Subject;
+import io.reactivex.Observable;
+import io.reactivex.subjects.PublishSubject;
+import io.reactivex.subjects.Subject;
 
 /**
  * 继续RxJava的EventBus
@@ -26,7 +25,7 @@ import rx.subjects.Subject;
  */
 public class RxEventBus {
     public static final RxEventBus bus = new RxEventBus();
-    private final Subject<Object, Object> _bus = new SerializedSubject<>(PublishSubject.create());
+    private final Subject<Object> _bus = PublishSubject.create();
 
     public static synchronized RxEventBus getInstance() {
         return bus;

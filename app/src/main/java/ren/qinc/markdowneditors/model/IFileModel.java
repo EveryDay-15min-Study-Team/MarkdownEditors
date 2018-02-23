@@ -18,8 +18,8 @@ package ren.qinc.markdowneditors.model;
 
 import java.io.File;
 
+import io.reactivex.Observable;
 import ren.qinc.markdowneditors.entity.FileBean;
-import rx.Observable;
 
 /**
  * FileMode抽象

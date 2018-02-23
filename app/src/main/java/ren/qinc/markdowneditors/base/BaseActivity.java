@@ -46,12 +46,12 @@ import java.lang.reflect.Field;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import ren.qinc.markdowneditors.AppManager;
 import ren.qinc.markdowneditors.event.RxEvent;
 import ren.qinc.markdowneditors.event.RxEventBus;
 import ren.qinc.markdowneditors.utils.SystemBarUtils;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * 原始Activity封装
@@ -140,7 +140,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
 
 
     //用于接收事件
-    private Subscription mSubscribe;
+    private Disposable mSubscribe;
 
     @Override
     public void registerEvent() {
@@ -156,7 +156,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
     @Override
     public void unregisterEvent() {
         if (mSubscribe != null) {
-            mSubscribe.unsubscribe();
+            mSubscribe.dispose();
         }
     }
 

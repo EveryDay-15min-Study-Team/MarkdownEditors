@@ -16,7 +16,7 @@
 
 package ren.qinc.markdowneditors.event;
 
-import rx.android.schedulers.AndroidSchedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 
 /**
  * The type Rx event.

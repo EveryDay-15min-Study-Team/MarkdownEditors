@@ -29,11 +29,11 @@ import com.squareup.leakcanary.RefWatcher;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import ren.qinc.markdowneditors.BuildConfig;
 import ren.qinc.markdowneditors.event.RxEvent;
 import ren.qinc.markdowneditors.event.RxEventBus;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * fragment基类
@@ -112,12 +112,12 @@ public abstract class BaseFragment extends BaseStatedFragment implements BaseVie
 
 
     //用于接收事件
-    private Subscription mSubscribe;
+    private Disposable mDisposable;
 
     @Override
     public void registerEvent() {
         //订阅
-        mSubscribe = RxEventBus.getInstance().toObserverable()
+        mDisposable = RxEventBus.getInstance().toObserverable()
                 .filter(o -> o instanceof RxEvent)//只接受RxEvent
                 .map(o -> (RxEvent) o)
                 .filter(r -> hasNeedEvent(r.type))//只接受type = 1和type = 2的东西
@@ -127,8 +127,8 @@ public abstract class BaseFragment extends BaseStatedFragment implements BaseVie
 
     @Override
     public void unregisterEvent() {
-        if (mSubscribe != null) {
-            mSubscribe.unsubscribe();
+        if (mDisposable != null) {
+            mDisposable.dispose();
         }
     }
 

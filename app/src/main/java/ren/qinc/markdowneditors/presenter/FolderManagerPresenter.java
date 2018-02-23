@@ -24,11 +24,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
+import io.reactivex.functions.Consumer;
+import io.reactivex.observers.DisposableObserver;
 import ren.qinc.markdowneditors.base.mvp.BasePresenter;
 import ren.qinc.markdowneditors.entity.FileBean;
 import ren.qinc.markdowneditors.utils.Check;
 import ren.qinc.markdowneditors.utils.FileUtils;
-import rx.Subscriber;
 
 /**
  * 主界面的Presenter
@@ -76,9 +77,10 @@ public class FolderManagerPresenter extends BasePresenter<IFolderManagerView> {
         callShowProgress(null, false, IFolderManagerView.CALL_GET_FILES);
         mCompositeSubscription.add(
                 mDataManager.getFileListData(currentFolder, key)
-                        .subscribe(new Subscriber<List<FileBean>>() {
+                        .subscribeWith(new DisposableObserver<List<FileBean>>() {
+
                                        @Override
-                                       public void onCompleted() {
+                                       public void onComplete() {
                                            mCompositeSubscription.remove(this);//任务完成
                                            callHideProgress(IFolderManagerView.CALL_GET_FILES);
                                        }
@@ -457,9 +459,9 @@ public class FolderManagerPresenter extends BasePresenter<IFolderManagerView> {
 
             mCompositeSubscription.add(
                     mDataManager.cutFile(temp, path)
-                            .subscribe(new Subscriber<FileBean>() {
+                            .subscribeWith(new DisposableObserver<FileBean>() {
                                 @Override
-                                public void onCompleted() {
+                                public void onComplete() {
                                     mCompositeSubscription.remove(this);//任务完成
                                     callHideProgress(IFolderManagerView.CALL_COPY_PASTE);
                                     mEditMode = EDIT_MODE_CLOSE;
@@ -489,9 +491,9 @@ public class FolderManagerPresenter extends BasePresenter<IFolderManagerView> {
             }
             mCompositeSubscription.add(
                     mDataManager.copyFile(temp, path)
-                            .subscribe(new Subscriber<FileBean>() {
+                            .subscribeWith(new DisposableObserver<FileBean>() {
                                 @Override
-                                public void onCompleted() {
+                                public void onComplete() {
                                     mCompositeSubscription.remove(this);//任务完成
                                     callHideProgress(IFolderManagerView.CALL_COPY_PASTE);
                                     mEditMode = EDIT_MODE_CLOSE;

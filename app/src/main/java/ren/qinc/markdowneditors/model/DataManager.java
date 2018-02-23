@@ -18,16 +18,19 @@ package ren.qinc.markdowneditors.model;
 
 import android.support.annotation.NonNull;
 
+import org.reactivestreams.Subscriber;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
 import ren.qinc.markdowneditors.entity.FileBean;
 import ren.qinc.markdowneditors.utils.Check;
 import ren.qinc.markdowneditors.utils.FileUtils;
 import ren.qinc.markdowneditors.utils.RxUtils;
-import rx.Observable;
-import rx.Subscriber;
 
 /**
  * Model统一数据管理
@@ -51,26 +54,23 @@ public class DataManager {
      * @return the observable
      */
     public Observable<String> readFile(@NonNull File file) {
-        return Observable.create(new Observable.OnSubscribe<String>() {
-            @Override
-            public void call(Subscriber<? super String> subscriber) {
-                if (file == null) {
-                    subscriber.onError(new IllegalStateException("文件获取失败：路径错误"));
-                    return;
-                }
-                if (file.isDirectory()) {
-                    subscriber.onError(new IllegalStateException("文件获取失败：不是文件"));
-                    return;
-                }
-                if (!file.exists()) {
-                    subscriber.onError(new IllegalStateException("文件获取失败：文件不存在"));
-                    return;
-                }
-
-                subscriber.onNext(FileUtils.readFile(file));
+        return Observable.create((ObservableOnSubscribe<String>) emitter -> {
+            if (file == null) {
+                emitter.onError(new IllegalStateException("文件获取失败：路径错误"));
+                return;
             }
+            if (file.isDirectory()) {
+                emitter.onError(new IllegalStateException("文件获取失败：不是文件"));
+                return;
+            }
+            if (!file.exists()) {
+                emitter.onError(new IllegalStateException("文件获取失败：文件不存在"));
+                return;
+            }
+
+            emitter.onNext(FileUtils.readFile(file));
         })
-                .compose(RxUtils.applySchedulersIoAndMainThread());
+        .compose(RxUtils.applySchedulersIoAndMainThread());
     }
 
     /**
@@ -81,19 +81,20 @@ public class DataManager {
      * @return the observable
      */
     public Observable<Boolean> saveFile(@NonNull File file, @NonNull String content) {
-        return Observable.create(new Observable.OnSubscribe<Boolean>() {
-            @Override
-            public void call(Subscriber<? super Boolean> subscriber) {
-                if (file == null) {
-                    subscriber.onError(new IllegalStateException("文件保存失败：路径错误"));
-                    return;
-                }
+//        return Observable.create(new Observable.OnSubscribe<Boolean>() {
+//            @Override
+//            public void call(Subscriber<? super Boolean> subscriber) {
+//                if (file == null) {
+//                    subscriber.onError(new IllegalStateException("文件保存失败：路径错误"));
+//                    return;
+//                }
+//
+//                boolean b = FileUtils.writeByte(file, content);
+//                subscriber.onNext(b);
+//            }
+//        }).compose(RxUtils.applySchedulersIoAndMainThread());
 
-                boolean b = FileUtils.writeByte(file, content);
-                subscriber.onNext(b);
-            }
-        }).compose(RxUtils.applySchedulersIoAndMainThread());
-
+        return Observable.just(true);
     }
 
     /**
@@ -104,34 +105,35 @@ public class DataManager {
      * @return the file list data
      */
     public Observable<List<FileBean>> getFileListData(File currentFolder, String key) {
-        File[] files = null;
-        if (Check.isEmpty(key))//默认，文件夹和文件
-            files = currentFolder
-                    .listFiles(file -> file.isDirectory() ||
-                            file.getName().endsWith(".md") ||
-                            file.getName().endsWith(".markdown") ||
-                            file.getName().endsWith(".mdown"));
-        else //搜索
-            files = currentFolder
-                    .listFiles(file -> file.getName().contains(key) &&
-                            (
-                                    file.getName().endsWith(".md") ||
-                                            file.getName().endsWith(".markdown") ||
-                                            file.getName().endsWith(".mdown")));//只显示md和文件夹
-
-
-        if (files == null)
-            return getCommonObservable();
-
-        return Observable
-                .from(files)
-                .filter(file -> file != null)
-//                .filter(file -> file.isDirectory() || file.getName().endsWith(".md"))
-                .flatMap(file -> mFileModel.getFileBeanObservable(file)
-                        .filter(bean -> bean != null))
-//                .toList()
-                .toSortedList(this::fileSort)
-                .compose(RxUtils.applySchedulersIoAndMainThread());
+//        File[] files = null;
+//        if (Check.isEmpty(key))//默认，文件夹和文件
+//            files = currentFolder
+//                    .listFiles(file -> file.isDirectory() ||
+//                            file.getName().endsWith(".md") ||
+//                            file.getName().endsWith(".markdown") ||
+//                            file.getName().endsWith(".mdown"));
+//        else //搜索
+//            files = currentFolder
+//                    .listFiles(file -> file.getName().contains(key) &&
+//                            (
+//                                    file.getName().endsWith(".md") ||
+//                                            file.getName().endsWith(".markdown") ||
+//                                            file.getName().endsWith(".mdown")));//只显示md和文件夹
+//
+//
+//        if (files == null)
+//            return getCommonObservable();
+//
+//        return Observable
+//                .from(files)
+//                .filter(file -> file != null)
+////                .filter(file -> file.isDirectory() || file.getName().endsWith(".md"))
+//                .flatMap(file -> mFileModel.getFileBeanObservable(file)
+//                        .filter(bean -> bean != null))
+////                .toList()
+//                .toSortedList(this::fileSort)
+//                .compose(RxUtils.applySchedulersIoAndMainThread());
+        return Observable.just(new ArrayList<>());
     }
 
     /**
@@ -143,47 +145,50 @@ public class DataManager {
      * @return the observable
      */
     public Observable<FileBean> copyFile(List<FileBean> beans, String targetPath) {
-        return Observable
-                .from(beans)
-//                .flatMap(bean -> mFileModel.getFileObservable(bean))
-                .map(bean ->
-                        FileUtils.copyFolder(bean.absPath, targetPath) ? bean : null
-                )
-                .map(bean -> {
-                    if (bean == null) throw new IllegalStateException("复制失败了");
-                    else return bean;
-                })
-                .map(bean -> {//新路径改变
-                    if (targetPath.endsWith(File.separator)) {
-                        bean.absPath = targetPath + bean.name;
-                    } else {
-                        bean.absPath = targetPath + File.separator + bean.name;
-                    }
-                    return bean;
-                })
-                .compose(RxUtils.applySchedulersIoAndMainThread());
+//        return Observable
+//                .from(beans)
+////                .flatMap(bean -> mFileModel.getFileObservable(bean))
+//                .map(bean ->
+//                        FileUtils.copyFolder(bean.absPath, targetPath) ? bean : null
+//                )
+//                .map(bean -> {
+//                    if (bean == null) throw new IllegalStateException("复制失败了");
+//                    else return bean;
+//                })
+//                .map(bean -> {//新路径改变
+//                    if (targetPath.endsWith(File.separator)) {
+//                        bean.absPath = targetPath + bean.name;
+//                    } else {
+//                        bean.absPath = targetPath + File.separator + bean.name;
+//                    }
+//                    return bean;
+//                })
+//                .compose(RxUtils.applySchedulersIoAndMainThread());
+        return Observable.empty();
     }
 
     public Observable<FileBean> cutFile(List<FileBean> beans, String target) {
-        return Observable
-                .from(beans)
-//                .flatMap(bean -> mFileModel.getFileObservable(bean))
-                .map(bean ->
-                        FileUtils.moveFolder(bean.absPath, target) ? bean : null
-                )
-                .map(bean -> {
-                    if (bean == null) throw new IllegalStateException("剪切失败了");
-                    else return bean;
-                })
-                .map(bean -> {//新路径改变
-                    if (target.endsWith(File.separator)) {
-                        bean.absPath = target + bean.name;
-                    } else {
-                        bean.absPath = target + File.separator + bean.name;
-                    }
-                    return bean;
-                })
-                .compose(RxUtils.applySchedulersIoAndMainThread());
+//        return Observable
+//                .from(beans)
+////                .flatMap(bean -> mFileModel.getFileObservable(bean))
+//                .map(bean ->
+//                        FileUtils.moveFolder(bean.absPath, target) ? bean : null
+//                )
+//                .map(bean -> {
+//                    if (bean == null) throw new IllegalStateException("剪切失败了");
+//                    else return bean;
+//                })
+//                .map(bean -> {//新路径改变
+//                    if (target.endsWith(File.separator)) {
+//                        bean.absPath = target + bean.name;
+//                    } else {
+//                        bean.absPath = target + File.separator + bean.name;
+//                    }
+//                    return bean;
+//                })
+//                .compose(RxUtils.applySchedulersIoAndMainThread());
+
+        return Observable.empty();
     }
 
     /**
@@ -195,11 +200,11 @@ public class DataManager {
      */
     @SuppressWarnings("unchecked")
     private <T> Observable<T> getCommonObservable() {
-        return Observable.create(new Observable.OnSubscribe<T>() {
+        return Observable.create(new ObservableOnSubscribe<T>() {
             @Override
-            public void call(Subscriber<? super T> subscriber) {
-                subscriber.onNext((T) getNullList());
-                subscriber.onCompleted();
+            public void subscribe(ObservableEmitter<T> emitter) throws Exception {
+                emitter.onNext((T) getNullList());
+                emitter.onComplete();
             }
         });
     }

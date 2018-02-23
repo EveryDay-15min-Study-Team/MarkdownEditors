@@ -16,8 +16,8 @@
 
 package ren.qinc.markdowneditors.base.mvp;
 
+import io.reactivex.disposables.CompositeDisposable;
 import ren.qinc.markdowneditors.model.DataManager;
-import rx.subscriptions.CompositeSubscription;
 
 
 /**
@@ -35,19 +35,19 @@ public class BasePresenter<T extends IMvpView> implements IPresenter<T> {
      * 用来保存 每个Presenter的所有订阅（请求），onDestory（detachView）或者subscribe的onCompleted中取消订阅
      * 自己维护生命周期，防止内存泄露
      */
-    public CompositeSubscription mCompositeSubscription;
+    public CompositeDisposable mCompositeSubscription;
 
 
     @Override
     public void attachView(T mvpView) {
         this.mMvpView = mvpView;
-        this.mCompositeSubscription = new CompositeSubscription();
+        this.mCompositeSubscription = new CompositeDisposable();
         this.mDataManager = DataManager.getInstance();
     }
 
     @Override
     public void detachView() {
-        this.mCompositeSubscription.unsubscribe();
+        this.mCompositeSubscription.dispose();
         this.mCompositeSubscription = null;
         this.mMvpView = null;
     }

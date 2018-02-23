@@ -21,8 +21,8 @@ import android.support.annotation.NonNull;
 import java.io.File;
 import java.util.Date;
 
+import io.reactivex.Observable;
 import ren.qinc.markdowneditors.entity.FileBean;
-import rx.Observable;
 
 /**
  * File 文件相关数据处理
